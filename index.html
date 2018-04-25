@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+	<link rel="stylesheet" href="./assets/photon/css/photon.css">
+ 	<link rel="stylesheet" href="./assets/css/app.css">
+  </head>
+  <body>
+	<div class="window">
+	  <header class="toolbar toolbar-header">
+		<h1 class="title">Header</h1>
+	  </header>
+	  <div class="window-content">
+		<div class="pane-group">
+		  <div class="pane-sm sidebar"></div>
+		  <div class="pane">
+		  <form class="box" method="post" action="" enctype="multipart/form-data">
+			  <div class="box__input">
+				<input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
+				<label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+				<button class="box__button" type="submit">Upload</button>
+			  </div>
+			  <div class="box__uploading">Uploading&hellip;</div>
+			  <div class="box__success">Done!</div>
+			  <div class="box__error">Error! <span></span>.</div>
+			  <div class="folder"></div>
+		  </form>
+		  </div>
+		</div>
+	  </div>
+	  <footer class="toolbar toolbar-footer">
+		<h1 class="title">Footer</h1>
+	  </footer>
+	</div>
+	<script>window.$ = window.jQuery = require('jquery');</script>
+	<script src="./config.js"></script>
+	<script src="./assets/js/compatibility.js"></script>
+	<script src="./assets/js/filesystem.js"></script>
+	<script src="./assets/js/filewatcher.js"></script>
+	<script src="./assets/js/app.js"></script>
+	<script src="./assets/js/setup.js"></script>
+	<script src="./assets/js/run.js"></script>
+  </body>
+</html>
