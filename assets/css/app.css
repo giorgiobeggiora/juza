@@ -1,3 +1,24 @@
+.sidebar {
+	padding: 1em 0;
+}
+.sidebar .folder {
+	padding: 0 1em;
+}
+.sidebar .folder.liv-0 {
+	font-weight: bold;
+}
+.sidebar .folder.liv-1 {
+	padding-left: 1.5em;
+}
+.sidebar .folder.liv-1:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.box .folder {
+	padding: 1em;
+}
+
 .box {
 	height: 100%;
 }
@@ -26,13 +47,18 @@
   background-color: grey;
 }
 
-.sidebar .liv-0 {
-	
+.box .folder .dir  .fa-folder{
+	color: orange;
+	width: 1.4em;
+	text-align: center;
 }
-.sidebar .liv-1 {
-	padding-left: 1em;
+.box .folder .file .fa-file   {
+	color: silver;
+	width: 1.4em;
+	text-align: center;
 }
-
-.folder {
-	padding: 1em;
+.box .folder .dir:hover,
+.box .folder .file:hover {
+	text-decoration: underline;
+	cursor: pointer;
 }

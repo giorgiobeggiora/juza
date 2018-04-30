@@ -66,8 +66,20 @@ function toBytes(s, u) {
 	return null;
 }
 
-function sizeFormat(s, u) {
+function toFixed(num, fixed) {
+    var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+    return num.toString().match(re)[0];
+}
+
+function sizeFormat(n, u) {
 	var um = ["TB","GB","MB","KB","B"];
+	var i = um.length - 1;
+	var result = n;
+	 while (result >= 1000 || i === 0) {
+		result /= 1000;
+		i--;
+	};
+	return toFixed(result, 2) + ' (' + um[i] + ')';
 }
 
 function fileSizeString(str) {

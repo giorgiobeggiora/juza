@@ -1,6 +1,28 @@
 var app = {};
 var droppedFiles = false;
 
+function syncRun (functions, done, step) {
+	let i = 0, len = functions.length;
+	step = step || function (cb) {cb()};
+	(function next () {
+		var func = functions[i++];
+		if (func) step(function(){func(next)});
+		else step(done);
+	})();
+}
+
+function asyncRun (functions, options) {
+	var done = options.done || function () {};
+	var step = options.step || function (cb) {cb()};
+	let i = 0, len = functions.length;
+	functions.forEach(function (func) {
+		func(function () {
+			if (++i === len) step(done);
+			else step();
+		});
+	});
+}
+
 /*
 function getLocalFoldersPaths() {
 	return Object.keys(localFolders).map(function(id){
@@ -32,24 +54,34 @@ function updateSidebar () {
 		
 		var $parent = $sidebar.find('.' + virtualFolder.id);
 		if (!$parent.length) {
-			$parent = $('<div class="folder liv-0 ' + virtualFolder.id + '"></div>');
-			$parent.html(virtualFolder.name);
+			$parent = $('<div class="folder liv-0 ' + 'folder_' + virtualFolder.id + '"><span class="name"></span><span class="space-used"></span></div>');
+			$parent.find('.name').text(virtualFolder.name);
 			$parent.appendTo($sidebar);
 		}
 		
 		Object_values(localFolders).forEach(function(localFolder){
 			var $folder = $sidebar.find('.' + localFolder.id);
 			if (!$folder.length) {
-				$folder = $('<div class="folder liv-1 ' + localFolder.id + '"></div>');
+				$folder = $('<div class="folder liv-1 ' + 'folder_' + localFolder.id + '"><span class="name"></span><span class="space-used"></span></div>');
 				$folder.appendTo($sidebar);
 			}
 			getStats(localFolder.path, function(stats) {
-				$folder.html(localFolder.name);
+				$folder.find('.name').text(localFolder.name);
 			});			
 			
 		});
 	});
 
+}
+
+var XXX = 0;
+function sidebarSpaceUpdate (folder) {
+	var container = document.querySelector('.sidebar .folder_' + folder.id + ' .space-used');
+	if (!container) {
+		setTimeout(function(){sidebarSpaceUpdate(folder)}, 0);
+		return;
+	}
+	container.textContent = sizeFormat(folder.spaceUsed);
 }
 
 app.init = function () {
@@ -75,10 +107,20 @@ app.init = function () {
 	currentVirtualFolder.readDir("", list => {
 		$folder.empty();
 		list.forEach(entry => {
-			if (entry.isDir) $folder.append('<div>[D] '+entry.name+'</div>')
+			if (entry.isDir) $folder.append(
+				'<div class="dir">' +
+					'<i class="fas fa-folder"></i>' +
+					entry.name +
+				'</div>'
+			);
 		});
 		list.forEach(entry => {
-			if (entry.isFile) $folder.append('<div>[F] '+entry.name+'</div>')
+			if (entry.isFile) $folder.append(
+				'<div class="file">' +
+					'<i class="fas fa-file"></i>' +
+					entry.name +
+				'</div>'
+			);
 		});
 	});
 }

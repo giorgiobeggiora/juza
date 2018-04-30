@@ -1,1 +1,4 @@
-readConfigFiles(app.init);
+syncRun([
+	readConfigFiles,
+	StartWatchers,
+], app.init);
