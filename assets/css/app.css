@@ -14,6 +14,9 @@
 	text-decoration: underline;
 	cursor: pointer;
 }
+.sidebar .folder .space-used::before {
+	content: "\0020";
+}
 
 .box .folder {
 	padding: 1em;

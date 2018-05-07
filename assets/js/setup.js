@@ -7,13 +7,8 @@ var $folder = $('.folder');
 $form.addClass('has-advanced-upload');
 
 function readConfigFiles(callback) {
-	if ( typeof callback !== "function" ) callback = function () {};
-	var keys = Object.keys(localFolders);
-	var keysLen = keys.length;
-	var i = 0;
-	function readNextConfigFile () {
-		var id = keys[i];
-		var localFolder = localFolders[id];
+	console.log("readConfigFiles")
+	async.eachSeries(localFolders, function (localFolder, cb) {
 		var configPath = localFolder.path + '.juza';
 		readFile(configPath, function (data) {
 			// TODO: sanitize everything
@@ -52,10 +47,7 @@ function readConfigFiles(callback) {
 			}
 			
 			virtualFolder.localFolders.push(localFolder);
-			if (++i < keysLen) readNextConfigFile()
-			else callback(virtualFolders);
-			
+			cb();
 		});
-	}
-	readNextConfigFile();
+	}, callback);
 }

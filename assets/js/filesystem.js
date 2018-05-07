@@ -79,7 +79,7 @@ function sizeFormat(n, u) {
 		result /= 1000;
 		i--;
 	};
-	return toFixed(result, 2) + ' (' + um[i] + ')';
+	return toFixed(result, 2) + ' ' + um[i];
 }
 
 function fileSizeString(str) {

@@ -1,19 +1,15 @@
 const chokidar = require("chokidar");
 
 function StartWatchers(callback){
-	if ( typeof callback !== "function" ) callback = function () {};
-	var keys = Object.keys(localFolders);
-	var keysLen = keys.length;
-	var i = 0;
-	keys.forEach(function(key){
-		var localFolder = localFolders[key];
+	console.log("StartWatchers")
+	async.each(localFolders, function(localFolder, cb) {
 		localFolder.watcher = chokidar.watch(localFolder.path, {
 		  ignored: /(^|[\/\\])\../,
 		  persistent: true,
 		  alwaysStat: true,
 		})
 		.on('ready', function () {
-			if (++i === keysLen) callback();
+			cb();
 		})
 		.on('add', function (path, stats) {
 			watcher_add(localFolder, path, stats);
@@ -36,7 +32,7 @@ function StartWatchers(callback){
 		.on('error', function (err) {
 			watcher_add(localFolder, err);
 		});
-	});
+	}, callback);
 }
 
 function watcher_add (localFolder, path, stats) {

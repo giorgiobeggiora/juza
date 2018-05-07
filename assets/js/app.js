@@ -1,5 +1,7 @@
-var app = {};
-var droppedFiles = false;
+const async = require("async");
+
+const app = {};
+let droppedFiles = false;
 
 function syncRun (functions, done, step) {
 	let i = 0, len = functions.length;
@@ -12,8 +14,8 @@ function syncRun (functions, done, step) {
 }
 
 function asyncRun (functions, options) {
-	var done = options.done || function () {};
-	var step = options.step || function (cb) {cb()};
+	let done = options.done || function () {};
+	let step = options.step || function (cb) {cb()};
 	let i = 0, len = functions.length;
 	functions.forEach(function (func) {
 		func(function () {
@@ -74,17 +76,16 @@ function updateSidebar () {
 
 }
 
-var XXX = 0;
 function sidebarSpaceUpdate (folder) {
 	var container = document.querySelector('.sidebar .folder_' + folder.id + ' .space-used');
 	if (!container) {
 		setTimeout(function(){sidebarSpaceUpdate(folder)}, 0);
 		return;
 	}
-	container.textContent = sizeFormat(folder.spaceUsed);
+	container.textContent = '(' + sizeFormat(folder.spaceUsed) + ')';
 }
 
-app.init = function () {
+app.init = function (err, results) {
 	
 	updateSidebar();
 	

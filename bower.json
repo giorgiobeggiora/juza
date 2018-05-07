@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "font-awesome": "^5.0.10"
+    "font-awesome": "^5.0.10",
+    "async": "^2.6.0"
   }
 }
