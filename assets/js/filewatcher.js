@@ -1,7 +1,6 @@
 const chokidar = require("chokidar");
 
 function StartWatchers(callback){
-	console.log("StartWatchers")
 	async.each(localFolders, function(localFolder, cb) {
 		localFolder.watcher = chokidar.watch(localFolder.path, {
 		  ignored: /(^|[\/\\])\../,
@@ -43,7 +42,8 @@ function watcher_add (localFolder, path, stats) {
 
 function watcher_addDir (localFolder, path, stats) {
 	console.log(`Directory ${path} has been added`);
-	if (stats) console.log(`File ${path} changed size to ${stats.size}`);
+	if (stats) console.log(`Directory ${path} changed size to ${stats.size}`);
+	localFolder.spaceUsedAdd(stats.size);
 }
 
 function watcher_change (localFolder, path, stats) {

@@ -56,7 +56,16 @@ function updateSidebar () {
 		
 		var $parent = $sidebar.find('.' + virtualFolder.id);
 		if (!$parent.length) {
-			$parent = $('<div class="folder liv-0 ' + 'folder_' + virtualFolder.id + '"><span class="name"></span><span class="space-used"></span></div>');
+			$parent = $(`
+			<div class="folder liv-0 folder_${virtualFolder.id}">
+				<div class="name"></div>
+				<div class="space">
+					<div class="space-free"></div>
+					<div class="space-used"></div>
+					<div class="space-bar"></div>
+				</div>
+			</div>
+			`);
 			$parent.find('.name').text(virtualFolder.name);
 			$parent.appendTo($sidebar);
 		}
@@ -64,7 +73,16 @@ function updateSidebar () {
 		Object_values(localFolders).forEach(function(localFolder){
 			var $folder = $sidebar.find('.' + localFolder.id);
 			if (!$folder.length) {
-				$folder = $('<div class="folder liv-1 ' + 'folder_' + localFolder.id + '"><span class="name"></span><span class="space-used"></span></div>');
+				$folder = $(`
+				<div class="folder liv-1 folder_${localFolder.id}">
+					<div class="name"></div>
+					<div class="space">
+						<div class="space-free"></div>
+						<div class="space-used"></div>
+						<div class="space-bar"></div>
+					</div>
+				</div>
+				`);
 				$folder.appendTo($sidebar);
 			}
 			getStats(localFolder.path, function(stats) {
@@ -77,12 +95,20 @@ function updateSidebar () {
 }
 
 function sidebarSpaceUpdate (folder) {
-	var container = document.querySelector('.sidebar .folder_' + folder.id + ' .space-used');
-	if (!container) {
+	var sidebarFolder = document.querySelector('.sidebar .folder_' + folder.id);
+	if (!sidebarFolder) {
 		setTimeout(function(){sidebarSpaceUpdate(folder)}, 0);
 		return;
 	}
-	container.textContent = '(' + sizeFormat(folder.spaceUsed) + ')';
+	var used = sidebarFolder.querySelector('.space-used');
+	var free = sidebarFolder.querySelector('.space-free');
+	var u = folder.spaceUsed;
+	var t = folder.space;
+	var f = folder.space - folder.spaceUsed;
+	used.textContent = sizeFormat(u);
+	free.textContent = sizeFormat(f);
+	var bg = sidebarFolder.querySelector('.space-bar');
+	bg.style.width = Math.floor((1 - f/t) * 100) + '%';
 }
 
 app.init = function (err, results) {

@@ -7,8 +7,7 @@ var $folder = $('.folder');
 $form.addClass('has-advanced-upload');
 
 function readConfigFiles(callback) {
-	console.log("readConfigFiles")
-	async.eachSeries(localFolders, function (localFolder, cb) {
+	async.each(localFolders, function (localFolder, cb) {
 		var configPath = localFolder.path + '.juza';
 		readFile(configPath, function (data) {
 			// TODO: sanitize everything
@@ -36,6 +35,7 @@ function readConfigFiles(callback) {
 			if ( !virtualFolder ) {
 				var parent = JSON.parse(data).parent;
 				virtualFolder = virtualFolders[parent.id] = parent;
+				virtualFolder.space = 0;
 				virtualFolder.localFolders = [];
 				virtualFolder.readDir = readVirtualFolder.bind(virtualFolder);
 				virtualFolder.spaceUsed = 0;
@@ -46,7 +46,9 @@ function readConfigFiles(callback) {
 				if (!currentVirtualFolder) currentVirtualFolder = virtualFolder;
 			}
 			
+			virtualFolder.space += localFolder.space;
 			virtualFolder.localFolders.push(localFolder);
+			sidebarSpaceUpdate(virtualFolder);
 			cb();
 		});
 	}, callback);

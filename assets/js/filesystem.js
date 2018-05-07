@@ -74,7 +74,7 @@ function toFixed(num, fixed) {
 function sizeFormat(n, u) {
 	var um = ["TB","GB","MB","KB","B"];
 	var i = um.length - 1;
-	var result = n;
+	var result = Math.abs(n);
 	 while (result >= 1000 || i === 0) {
 		result /= 1000;
 		i--;
@@ -84,13 +84,13 @@ function sizeFormat(n, u) {
 
 function fileSizeString(str) {
 	var scala = 1000;
-	var um = ["TB","GB","MB","KB","B"];
+	var um = ["B","KB","MB","GB","TB"];
 	var re = new RegExp("^(\\d+)(" + um.join("|") + ")$", "i");
 	var m = re.exec(str);
 	if(!m) return null;
-	var n = m[0] * 1;
+	var n = m[1] * 1;
 	if (!Number.isFinite(n)) return null;
-	var p = scala.indexOf(m[1]);
+	var p = um.indexOf(m[2]);
 	if (p < 0) return null;
 	return n * Math.pow(scala, p);
 }

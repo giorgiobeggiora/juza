@@ -14,8 +14,29 @@
 	text-decoration: underline;
 	cursor: pointer;
 }
-.sidebar .folder .space-used::before {
-	content: "\0020";
+.sidebar .folder .name {
+	display: block;
+}
+.sidebar .folder .space {
+	position: relative;
+	background-color: green;
+	font-size: 8px;
+	color: white;
+	font-family: verdana;
+}
+.sidebar .folder .space-bar {
+	background-color: blue;
+}
+.sidebar .folder .space-bar::before {
+	content: '\00a0';
+}
+.sidebar .folder .space-used {
+	position: absolute;
+	left: 0.5em;
+}
+.sidebar .folder .space-free {
+	position: absolute;
+	right: 0.5em;
 }
 
 .box .folder {
