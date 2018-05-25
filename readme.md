@@ -8,4 +8,4 @@ Juza manage and distribute the content of the local folders to best fit the remo
 
 Made with Electron.
 
-Note: due to the fact Juza runs locally on your computer, Juza will cause some file upload. Check your cloud storages terms and conditions to know their limits. such as space avaible, file transfer, file size, etc.
+Note: due to the fact Juza runs locally on your computer, Juza will cause some file uploads. Check your cloud storages terms and conditions to know their limits. such as space avaible, file transfer, file size, etc.
