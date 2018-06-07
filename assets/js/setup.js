@@ -41,6 +41,9 @@ function readConfigFiles(callback) {
 					navPath: [],
 					readDir: readVirtualFolder.bind(virtualFolder),
 					readDirChild: readChildFolder.bind(virtualFolder),
+					readDirParent: readParentFolder.bind(virtualFolder),
+					readDirAbs: readAbsFolder.bind(virtualFolder),
+					readDirRoot: readRootFolder.bind(virtualFolder),
 					spaceUsed: 0,
 					spaceUsedAdd: function (q) {
 						virtualFolder.spaceUsed += q;

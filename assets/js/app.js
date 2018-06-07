@@ -29,9 +29,24 @@ function readVirtualFolder (path, callback) {
 }
 
 function readChildFolder (dirName) {
-	var path = this.navPath;
-	path.push(dirName);
-	this.readDir(path.join('\\'), updateFolder);
+	var navPath = this.navPath;
+	navPath.push(dirName);
+	this.readDir(navPath.join('\\'), updateFolder);
+}
+function readRootFolder () {
+	console.log("ROOT",this)
+	var navPath = this.navPath;
+	navPath.splice(0,navPath.length);
+	this.readDir('', updateFolder);
+}
+function readParentFolder (dirName) {
+	var navPath = this.navPath;
+	if (!navPath.length) return;
+	navPath.pop();
+	this.readDir(navPath.join('\\'), updateFolder);
+}
+function readAbsFolder (path) {
+	
 }
 
 function updateFolder (list) {
@@ -69,7 +84,9 @@ function updateSidebar () {
 				</div>
 			</div>
 			`);
-			$parent.find('.name').text(virtualFolder.name);
+			$parent.find('.name').text(virtualFolder.name).on('click', function () {
+				virtualFolder.readDirRoot();
+			});
 			$parent.appendTo($sidebar);
 		}
 		
@@ -90,7 +107,7 @@ function updateSidebar () {
 			}
 			getStats(localFolder.path, function(err, stats) {
 				$folder.find('.name').text(localFolder.name);
-			});			
+			});
 			
 		});
 	});
