@@ -3,52 +3,6 @@ const async = require("async");
 const app = {};
 let droppedFiles = false;
 
-function readVirtualFolder (path, callback) {
-	path = path || "";
-	callback = callback || (() => {});
-	var list = [];
-	var lf = Object_values(this.localFolders);
-	var lfLen = lf.length;
-	var iTot = 0;
-	lf.forEach(function(localFolder, i){
-		var absPath = p.resolve(localFolder.path, path);
-		console.log(i, absPath)
-		readDir (absPath, function (err, dir) {
-			var skipAddToList = false;
-			if (err) {
-				if (err.code === 'ENOENT') {
-					skipAddToList = true;
-				} else throw err;
-			}
-			if (!skipAddToList) {
-				list = list.concat(dir);
-			}
-			if (++iTot === lfLen) callback(list);
-		});
-	});
-}
-
-function readChildFolder (dirName) {
-	var navPath = this.navPath;
-	navPath.push(dirName);
-	this.readDir(navPath.join('\\'), updateFolder);
-}
-function readRootFolder () {
-	console.log("ROOT",this)
-	var navPath = this.navPath;
-	navPath.splice(0,navPath.length);
-	this.readDir('', updateFolder);
-}
-function readParentFolder (dirName) {
-	var navPath = this.navPath;
-	if (!navPath.length) return;
-	navPath.pop();
-	this.readDir(navPath.join('\\'), updateFolder);
-}
-function readAbsFolder (path) {
-	
-}
-
 function updateFolder (list) {
 	$folder.empty();
 	list.forEach(entry => {

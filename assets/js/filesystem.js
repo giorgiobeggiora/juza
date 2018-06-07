@@ -18,7 +18,7 @@ function readDir (path, callback) {
 		var list = new Array(filesLen);
 		var iTot = 0;
 		files.forEach(function(name, i){
-			getStats(p.resolve(path, name), function(err, stats){
+			getStats(p.join(path, name), function(err, stats){
 				list[i] = {
 					name:name,
 					stats:stats,

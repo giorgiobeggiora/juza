@@ -34,23 +34,7 @@ function readConfigFiles(callback) {
 			
 			if ( !virtualFolder ) {
 				var parent = JSON.parse(data).parent;
-				virtualFolder = virtualFolders[parent.id] = parent;
-				Object.assign(virtualFolder, {
-					space: 0,
-					localFolders: [],
-					navPath: [],
-					readDir: readVirtualFolder.bind(virtualFolder),
-					readDirChild: readChildFolder.bind(virtualFolder),
-					readDirParent: readParentFolder.bind(virtualFolder),
-					readDirAbs: readAbsFolder.bind(virtualFolder),
-					readDirRoot: readRootFolder.bind(virtualFolder),
-					spaceUsed: 0,
-					spaceUsedAdd: function (q) {
-						virtualFolder.spaceUsed += q;
-						sidebarSpaceUpdate(virtualFolder);
-					}
-				});
-				
+				virtualFolder = virtualFolders[parent.id] = new VirtualFolder(parent);
 				if (!currentVirtualFolder) currentVirtualFolder = virtualFolder;
 			}
 			
