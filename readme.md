@@ -1,5 +1,11 @@
-Juza Cloud Manager
+# Juza Cloud Manager
 
-Each virtual folder show a merged view of the structure of chosen local folders.
-Under the hood, it distributes files between those folders, each of which has its own configurable maximum space limit. Useful to manage in a single virtual folder the space of multiple accounts of any cloud storage service usable via a client sync application.
+Juza is a desktop application that lets you merge the space available from multiple cloud storage services into virtual local folders.
+
+It requires that the sync client of each cloud storage service you want to use runs locally too.
+
+Juza manage and distribute the content of the local folders to best fit the remote storage limit of each remote storage service.
+
 Made with Electron.
+
+Note: due to the fact Juza runs locally on your computer, Juza will cause some upload. Please check your cloud storages terms and conditions to know their limits. such as space avaible, file transfer, file size, etc.
