@@ -3,51 +3,54 @@ const async = require("async");
 const app = {};
 let droppedFiles = false;
 
-function syncRun (functions, done, step) {
-	let i = 0, len = functions.length;
-	step = step || function (cb) {cb()};
-	(function next () {
-		var func = functions[i++];
-		if (func) step(function(){func(next)});
-		else step(done);
-	})();
-}
-
-function asyncRun (functions, options) {
-	let done = options.done || function () {};
-	let step = options.step || function (cb) {cb()};
-	let i = 0, len = functions.length;
-	functions.forEach(function (func) {
-		func(function () {
-			if (++i === len) step(done);
-			else step();
-		});
-	});
-}
-
-/*
-function getLocalFoldersPaths() {
-	return Object.keys(localFolders).map(function(id){
-		return localFolders[id].path;
-	});
-}
-*/
-
-function readVirtualFolder (p, callback) {
-	p = p || "";
+function readVirtualFolder (path, callback) {
+	path = path || "";
 	callback = callback || (() => {});
 	var list = [];
 	var lf = Object_values(this.localFolders);
 	var lfLen = lf.length;
 	var iTot = 0;
 	lf.forEach(function(localFolder, i){
-		var path = localFolder.path + p;
-		try { readDir (path, function (dir) {
-			list = list.concat(dir);
+		var absPath = p.resolve(localFolder.path, path);
+		console.log(i, absPath)
+		readDir (absPath, function (err, dir) {
+			var skipAddToList = false;
+			if (err) {
+				if (err.code === 'ENOENT') {
+					skipAddToList = true;
+				} else throw err;
+			}
+			if (!skipAddToList) {
+				list = list.concat(dir);
+			}
 			if (++iTot === lfLen) callback(list);
-		}); } catch (e) {
-			if (++iTot === lfLen) callback(list);
-		}
+		});
+	});
+}
+
+function readChildFolder (dirName) {
+	var path = this.navPath;
+	path.push(dirName);
+	this.readDir(path.join('\\'), updateFolder);
+}
+
+function updateFolder (list) {
+	$folder.empty();
+	list.forEach(entry => {
+		if (entry.isDir) $folder.append(
+			'<div class="dir" title="' + entry.name + '" data-name="' + entry.name + '">' +
+				'<i class="fas fa-folder"></i>' +
+				entry.name +
+			'</div>'
+		);
+	});
+	list.forEach(entry => {
+		if (entry.isFile) $folder.append(
+			'<div class="file" title="' + entry.name + '" data-name="' + entry.name + '">' +
+				'<i class="fas fa-file"></i>' +
+				entry.name +
+			'</div>'
+		);
 	});
 }
 
@@ -85,7 +88,7 @@ function updateSidebar () {
 				`);
 				$folder.appendTo($sidebar);
 			}
-			getStats(localFolder.path, function(stats) {
+			getStats(localFolder.path, function(err, stats) {
 				$folder.find('.name').text(localFolder.name);
 			});			
 			
@@ -102,13 +105,15 @@ function sidebarSpaceUpdate (folder) {
 	}
 	var used = sidebarFolder.querySelector('.space-used');
 	var free = sidebarFolder.querySelector('.space-free');
+	
 	var u = folder.spaceUsed;
 	var t = folder.space;
 	var f = folder.space - folder.spaceUsed;
+	
 	used.textContent = sizeFormat(u);
 	free.textContent = sizeFormat(f);
 	var bg = sidebarFolder.querySelector('.space-bar');
-	bg.style.width = Math.floor((1 - f/t) * 100) + '%';
+	bg.style.width = Math.floor(100 - f / t * 100) + '%';
 }
 
 app.init = function (err, results) {
@@ -131,23 +136,21 @@ app.init = function (err, results) {
 		console.log(droppedFiles)
 	});
 	
-	currentVirtualFolder.readDir("", list => {
-		$folder.empty();
-		list.forEach(entry => {
-			if (entry.isDir) $folder.append(
-				'<div class="dir">' +
-					'<i class="fas fa-folder"></i>' +
-					entry.name +
-				'</div>'
-			);
-		});
-		list.forEach(entry => {
-			if (entry.isFile) $folder.append(
-				'<div class="file">' +
-					'<i class="fas fa-file"></i>' +
-					entry.name +
-				'</div>'
-			);
-		});
+	currentVirtualFolder.readDir("", updateFolder);
+	
+	$form.on('click', '.file', function (event) {
+		onFolderItemClick.call(this, event.target, false);
 	});
+	
+	$form.on('click', '.dir', function (event) {
+		onFolderItemClick.call(this, event.target, true);
+	});
+	
+}
+
+function onFolderItemClick (target, isDir) {
+	if (isDir) {
+		currentVirtualFolder.readDirChild(target.dataset.name);
+		return;
+	}
 }

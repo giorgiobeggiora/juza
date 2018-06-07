@@ -1,22 +1,31 @@
 const fs = require('fs');
+const p = require('path');
 
 function readDir (path, callback) {
 	fs.readdir(path, (err, files) => {
-		if (err) throw  err;
+		if (err) {
+			callback(err);
+			return;
+		}
+		console.log("files",files);
+		if (!files) {
+			callback (null, []);
+			return;
+		}
 		var index = files.indexOf(".juza");
 		if (index !== -1) files.splice(index, 1);
 		var filesLen = files.length;
 		var list = new Array(filesLen);
 		var iTot = 0;
 		files.forEach(function(name, i){
-			getStats(path + name, function(stats){
+			getStats(p.resolve(path, name), function(err, stats){
 				list[i] = {
 					name:name,
 					stats:stats,
 					isDir:stats.isDirectory(),
 					isFile:stats.isFile()
 				};
-				if (++iTot === filesLen) callback (list);
+				if (++iTot === filesLen) callback (null, list);
 			});
 		});
 	});
@@ -24,10 +33,13 @@ function readDir (path, callback) {
 
 function getStats (path, callback) {
 	fs.stat(path, function (err, stats) {
-		if (err) throw err;
-		stats.isFile()
-		stats.isDirectory()
-		callback(stats);
+		if (err) {
+			callback(err);
+			return;
+		}
+//		stats.isFile()
+//		stats.isDirectory()
+		callback(null, stats);
 	});
 }
 
