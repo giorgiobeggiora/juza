@@ -1,5 +1,5 @@
-const fs = require('fs');
-const p = require('path');
+// const fs = require('fs');
+// const p = require('path');
 
 function readDir (path, callback) {
 	fs.readdir(path, (err, files) => {

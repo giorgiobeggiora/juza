@@ -56,6 +56,12 @@ class VirtualFolder {
 		this.readDir('', this.render);
 	}
 					
+	addLocalFolder (folder) {
+		this.space += folder.space;
+		this.localFolders.push(folder);
+		sidebarSpaceUpdate(this);		
+	}
+	
 	spaceUsedAdd (q) {
 		this.spaceUsed += q;
 		sidebarSpaceUpdate(this);

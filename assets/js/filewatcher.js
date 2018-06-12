@@ -1,7 +1,8 @@
-const chokidar = require("chokidar");
+// const chokidar = require("chokidar");
 
 function StartWatchers(callback){
 	async.each(localFolders, function(localFolder, cb) {
+		console.log("localFolder",localFolder)
 		localFolder.watcher = chokidar.watch(localFolder.path, {
 		  ignored: /(^|[\/\\])\../,
 		  persistent: true,

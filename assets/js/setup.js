@@ -1,3 +1,4 @@
+var localFolders = {};
 var virtualFolders = {};
 var currentVirtualFolder = "";
 var $sidebar = $('.sidebar');
@@ -7,41 +8,24 @@ var $folder = $('.folder');
 $form.addClass('has-advanced-upload');
 
 function readConfigFiles(callback) {
-	async.each(localFolders, function (localFolder, cb) {
-		var configPath = localFolder.path + '.juza';
-		readFile(configPath, function (data) {
-			// TODO: sanitize everything
+	async.each(config.localFolders, function (folder, cb) {
+		var configPath = p.join(folder.path, '.juza');
+		readFile(configPath, function (jsonStr) {
 			
-			var folder = JSON.parse(data);
-			var virtualFolder = virtualFolders[folder.parent.id];
-			delete folder.parent;
+			var json = Object.assign(JSON.parse(jsonStr), {path: folder.path});
+			var localFolder = localFolders[json.id] = new LocalFolder(json);
 			
-			localFolder.name = (
-				typeof folder.name === "string" ? folder.name : null
-			);
-			localFolder.space = (
-				toBytes(folder.space)
-			);
-			localFolder.filesize = (
-				toBytes(folder.space)
-			);
-			localFolder.spaceUsed = 0;
-			localFolder.spaceUsedAdd = function (q) {
-				localFolder.spaceUsed += q;
-				sidebarSpaceUpdate(localFolder);
-				virtualFolder.spaceUsedAdd(q);
-			}
-			
+			var parentId = localFolder.parentId;
+			var virtualFolder = parentId ? virtualFolders[parentId] : null;
 			if ( !virtualFolder ) {
-				var parent = JSON.parse(data).parent;
+				var parent = json.parent;
 				virtualFolder = virtualFolders[parent.id] = new VirtualFolder(parent);
 				if (!currentVirtualFolder) currentVirtualFolder = virtualFolder;
 			}
-			
-			virtualFolder.space += localFolder.space;
-			virtualFolder.localFolders.push(localFolder);
-			sidebarSpaceUpdate(virtualFolder);
+
+			virtualFolder.addLocalFolder(localFolder);
 			cb();
+			
 		});
 	}, callback);
 }
