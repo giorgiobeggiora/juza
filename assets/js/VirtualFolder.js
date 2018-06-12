@@ -11,13 +11,10 @@ class VirtualFolder {
 	readDir (path, callback) {
 		path = path || "";
 		callback = callback || (() => {});
-		var list = [];
 		var lf = Object_values(this.localFolders);
-		var lfLen = lf.length;
-		var iTot = 0;
-		lf.forEach(function(localFolder, i){
+		var list = [];
+		async.each(lf, function(localFolder, cb){
 			var absPath = p.join(localFolder.path, path);
-			console.log(i, absPath)
 			readDir (absPath, function (err, dir) {
 				var skipAddToList = false;
 				if (err) {
@@ -28,8 +25,10 @@ class VirtualFolder {
 				if (!skipAddToList) {
 					list = list.concat(dir);
 				}
-				if (++iTot === lfLen) callback(list);
+				cb();
 			});
+		}, function(){
+			callback(list);
 		});
 	}
 	

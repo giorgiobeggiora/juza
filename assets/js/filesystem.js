@@ -14,19 +14,21 @@ function readDir (path, callback) {
 		}
 		var index = files.indexOf(".juza");
 		if (index !== -1) files.splice(index, 1);
-		var filesLen = files.length;
-		var list = new Array(filesLen);
-		var iTot = 0;
-		files.forEach(function(name, i){
+		var list = [];
+		console.log("files",files)
+		async.each(files, function(name, cb) {
+			console.log("path",path,"name",name)
 			getStats(p.join(path, name), function(err, stats){
-				list[i] = {
+				list.push({
 					name:name,
 					stats:stats,
 					isDir:stats.isDirectory(),
 					isFile:stats.isFile()
-				};
-				if (++iTot === filesLen) callback (null, list);
+				});
+				cb();
 			});
+		}, function(){
+			callback(null, list);
 		});
 	});
 }
