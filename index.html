@@ -11,13 +11,16 @@
   <body>
 	<div class="window">
 	  <header class="toolbar toolbar-header">
-		<h1 class="title">Header</h1>
+		<h1 class="title">Juza / <span class="path-virtual" id="path-virtual"></span> <span class="path-physical" id="path-physical"></span></h1>
+		<div class="toolbar" id="toolbar">
+			<button class="js-up up">UP</button>
+		</div>
 	  </header>
 	  <div class="window-content">
 		<div class="pane-group">
-		  <div class="pane-sm sidebar"></div>
+		  <div class="pane-sm sidebar" id="sidebar"></div>
 		  <div class="pane">
-		  <form class="box" method="post" action="" enctype="multipart/form-data">
+		  <form class="box" id="box" method="post" action="" enctype="multipart/form-data">
 			  <div class="box__input">
 				<input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
 				<label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
@@ -26,7 +29,7 @@
 			  <div class="box__uploading">Uploading&hellip;</div>
 			  <div class="box__success">Done!</div>
 			  <div class="box__error">Error! <span></span>.</div>
-			  <div class="folder"></div>
+			  <div class="folder" id="folder"></div>
 		  </form>
 		  </div>
 		</div>

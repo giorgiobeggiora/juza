@@ -7,7 +7,6 @@ function readDir (path, callback) {
 			callback(err);
 			return;
 		}
-		console.log("files",files);
 		if (!files) {
 			callback (null, []);
 			return;
@@ -15,9 +14,7 @@ function readDir (path, callback) {
 		var index = files.indexOf(".juza");
 		if (index !== -1) files.splice(index, 1);
 		var list = [];
-		console.log("files",files)
 		async.each(files, function(name, cb) {
-			console.log("path",path,"name",name)
 			getStats(p.join(path, name), function(err, stats){
 				list.push({
 					name:name,

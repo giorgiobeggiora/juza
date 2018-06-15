@@ -1,9 +1,12 @@
 var localFolders = {};
 var virtualFolders = {};
 var currentVirtualFolder = "";
-var $sidebar = $('.sidebar');
-var $form = $('.box');
-var $folder = $('.folder');
+var $toolbar = $('#toolbar');
+var $sidebar = $('#sidebar');
+var $form = $('#box');
+var $folder = $('#folder');
+var $pathVirtual = $('#path-virtual');
+var $pathPhysical = $('#path-physical');
 
 $form.addClass('has-advanced-upload');
 

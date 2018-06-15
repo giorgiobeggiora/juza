@@ -1,3 +1,20 @@
+.path-physical a::before {
+	content: " / ";
+}
+
+.path-virtual a,
+.path-physical a {
+	text-decoration: none;
+	color: #333;
+}
+
+.path-virtual a:hover .folder-name,
+.path-physical a:hover .folder-name {
+	text-decoration: underline;
+	color: #333;
+	cursor: pointer;
+}
+
 .sidebar {
 	padding: 1em 0;
 }

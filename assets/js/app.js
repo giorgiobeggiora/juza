@@ -4,6 +4,9 @@ const app = {};
 let droppedFiles = false;
 
 function updateFolder (list) {
+	
+	updatePath();
+	
 	$folder.empty();
 	list.forEach(entry => {
 		if (entry.isDir) $folder.append(
@@ -21,6 +24,27 @@ function updateFolder (list) {
 			'</div>'
 		);
 	});
+}
+
+function updatePath () {
+	
+	var folder = currentVirtualFolder;
+	console.log("UPDATE FOLDER", folder.name, folder.navPath)
+	
+	$pathVirtual.empty();
+	var $a = $('<a href="javascript:;">');
+	var $span = $('<span class="folder-name">').text(folder.name);
+	$pathVirtual.append($a);
+	$a.append($span);
+
+	$pathPhysical.empty();
+	folder.navPath.forEach(function(name) {
+		var $a = $('<a href="javascript:;">');
+		var $span = $('<span class="folder-name">').text(name);
+		$pathPhysical.append($a);
+		$a.append($span);
+	});
+	
 }
 
 function updateSidebar () {
@@ -107,7 +131,30 @@ app.init = function (err, results) {
 		console.log(droppedFiles)
 	});
 	
-	currentVirtualFolder.readDir("", updateFolder);
+	$toolbar.on('click', function(e) {
+		const classList = e.target.classList;
+		switch (true) {
+			case classList.contains('js-up'):
+				currentVirtualFolder.readDirParent();
+			break;
+		}
+	});
+	
+	$pathVirtual.on('click', 'a', function(e){
+		currentVirtualFolder.readDir('', updateFolder);
+	});
+	
+	$pathPhysical.on('click', 'a', function(e){
+		$a = $(this);
+		var i = $a.prevAll().length;
+		var path = [];
+		do {
+			path.unshift($pathPhysical.find('a:nth-child('+(i+1)+')').text());
+		} while (i--);
+		currentVirtualFolder.readDir(path.join('\\'), updateFolder);
+	});
+	
+	currentVirtualFolder.readDir('', updateFolder);
 	
 	$form.on('click', '.file', function (event) {
 		onFolderItemClick.call(this, event.target, false);
