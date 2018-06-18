@@ -24,7 +24,7 @@ function readDir (path, callback) {
 				});
 				cb();
 			});
-		}, function(){
+		}, function(err){
 			callback(null, list);
 		});
 	});

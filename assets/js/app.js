@@ -1,10 +1,11 @@
 // const async = require("async");
 
 const app = {};
+app.lang = navigator.language;
 let droppedFiles = false;
 
 function updateFolder (list) {
-	
+	console.log("updateFolder()", list)
 	updatePath();
 	
 	$folder.empty();
@@ -27,7 +28,7 @@ function updateFolder (list) {
 }
 
 function updatePath () {
-	
+	console.log("updatePath",currentVirtualFolder.navPath)
 	var folder = currentVirtualFolder;
 	console.log("UPDATE FOLDER", folder.name, folder.navPath)
 	

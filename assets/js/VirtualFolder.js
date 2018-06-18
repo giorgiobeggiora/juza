@@ -10,6 +10,11 @@ class VirtualFolder {
 	
 	readDir (path, callback) {
 		path = path || "";
+		var navPath = this.navPath;
+		navPath.splice(0, navPath.length, ...path.split("\\"));
+		if (navPath[0] === "") navPath.splice(0, 1);
+		if (navPath[navPath.length - 1] === "") navPath.splice(-1, 1);
+		
 		callback = callback || (() => {});
 		var lf = Object_values(this.localFolders);
 		var list = [];
@@ -28,6 +33,12 @@ class VirtualFolder {
 				cb();
 			});
 		}, function(){
+			list.sort((a, b) => {
+				var order = a.isDir ? (b.isDir ? 0 : 1) : (b.isDir ? -1 : 0);
+				if (!order) order = a.name.localeCompare(b.name, app.lang);
+				return order;
+			});
+			
 			callback(list);
 		});
 	}
